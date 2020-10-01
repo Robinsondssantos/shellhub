@@ -1,4 +1,4 @@
-package main
+ package main
 
 import (
 	//	"fmt"
@@ -83,7 +83,7 @@ func testAPI(e *httpexpect.Expect) {
 		JSON().Object()
 	t.Keys().ContainsOnly("name", "namespace", "token", "uid")
 	t.Value("name").Equal("mac")
-	t.Value("namespace").Equal("edu")
+	t.Value("namespace").Equal("username")
 	uid := t.Value("uid").String().Raw()
 
 	u := e.GET(fmt.Sprintf("/api/devices/%s", uid)).
@@ -103,7 +103,7 @@ func testAPI(e *httpexpect.Expect) {
 			"version":     "test",
 		},
 		"name":       "mac",
-		"namespace":  "edu",
+		"namespace":  "username",
 		"public_key": "key",
 		"status":     "pending",
 		"tenant_id":  "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
@@ -142,6 +142,78 @@ func testAPI(e *httpexpect.Expect) {
 		Status(http.StatusOK)
 	_ = x
 
+	// Test for public session routes
+	//set a session uid that exists
+	uid_session := "8af290424d42a144174bffb2d57f0cefa403a5ef78de22d8f9262e512e203d6c"
+
+	su := e.GET(fmt.Sprintf("/api/sessions/%s", uid_session)).
+		WithHeader("Authorization", "Bearer "+token).
+		Expect().
+		Status(http.StatusOK).
+		JSON().Object()
+	su.Value("authenticated").Equal(true)
+
+	// spu := e.GET(fmt.Sprintf("/api/sessions/%s/play", uid_session)).
+	// 	WithHeader("Authorization", "Bearer "+token).
+	// 	Expect().
+	// 	Status(http.StatusOK).
+	// 	JSON().Array()
+	// spu.First().Object().Value("width").Equal(110)
+
+	array = e.GET("/api/sessions").
+		WithHeader("Authorization", "Bearer "+token).
+		Expect().
+		Status(http.StatusOK).
+		JSON().Array()
+	fmt.Println(array)
+
+	// public tests for stats
+	stats := e.GET("/api/stats").
+		WithHeader("Authorization", "Bearer "+token).
+		Expect().
+		Status(http.StatusOK).
+		JSON().Object()
+	fmt.Println(stats)
+
+	//public tests for change username
+
+	status_array := []int{http.StatusOK, http.StatusOK, http.StatusConflict, http.StatusForbidden}
+
+	forms_array := []interface{}{
+		map[string]interface{}{ // successfull email and username change
+			"username":        "newusername",
+			"email":           "new@email.com",
+			"currentPassword": "",
+			"newPassword":     "",
+		},
+		map[string]interface{}{ // successfull password change
+			"username":        "",
+			"email":           "",
+			"currentPassword": "password",
+			"newPassword":     "new_password_hash",
+		},
+		map[string]interface{}{ //conflict
+			"username":        "username2",
+			"email":           "new@email.com",
+			"currentPassword": "",
+			"newPassword":     "",
+		},
+		map[string]interface{}{ // forbidden
+			"username":        "",
+			"email":           "",
+			"currentPassword": "wrong_password",
+			"newPassword":     "new_password",
+		},
+	}
+
+	for i, v := range forms_array {
+		n := e.PUT("/api/user").
+			WithHeader("Authorization", "Bearer "+token).
+			WithJSON(v).
+			Expect().
+			Status(status_array[i])
+		fmt.Println(n)
+	}
 	/*e.GET(fmt.Sprintf("/internal/token/%s", tenant)).
 			Expect().
 			Status(http.StatusOK)
@@ -174,7 +246,7 @@ func TestEchoClient(t *testing.T) {
 
 	e := httpexpect.WithConfig(httpexpect.Config{
 		// prepend this url to all requests
-		BaseURL: "http://api:8080",
+		BaseURL: "http://localhost/",
 
 		// use http.Client with a cookie jar and timeout
 		Client: &http.Client{
