@@ -121,9 +121,9 @@ func testAPI(e *httpexpect.Expect) {
 	for _, val := range array.Iter() {
 		val.Object().ContainsMap(device)
 	}
-	// e.GET(fmt.Sprintf("/internal/auth/token/%s", tenant)).
-	// 	Expect().
-	// 	Status(http.StatusOK)
+	e.GET(fmt.Sprintf("/internal/auth/token/%s", tenant)).
+		Expect().
+		Status(http.StatusOK)
 
 	data := map[string]interface{}{
 		"name": "newName",
@@ -131,28 +131,34 @@ func testAPI(e *httpexpect.Expect) {
 
 	_ = data
 
-	/*v := e.PATCH(fmt.Sprintf("/api/devices/%s", uid)).
+	v := e.PATCH(fmt.Sprintf("/api/devices/%s", uid)).
 		WithHeader("Authorization", "Bearer "+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
 		WithJSON(data).
 		Expect().
 		Status(http.StatusOK)
 	_ = v
 
-	/* w := e.PATCH(fmt.Sprintf("/api/devices/%s/accepted", uid)).
+	w := e.PATCH(fmt.Sprintf("/api/devices/%s/accepted", uid)).
 		WithHeader("Authorization", "Bearer "+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
 		Expect().
 		Status(http.StatusOK)
 	_ = w
 
 	x := e.DELETE(fmt.Sprintf("/api/devices/%s", uid)).
 		WithHeader("Authorization", "Bearer "+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
 		Expect().
 		Status(http.StatusOK)
-	_ = x */
+	_ = x
 
 	// Test for public session routes
 	//set a session uid that exists
-	uid_session := "8af290424d42a144174bffb2d57f0cefa403a5ef78de22d8f9262e512e203d6c"
+
 
 	su := e.GET(fmt.Sprintf("/api/sessions/%s", uid_session)).
 		WithHeader("Authorization", "Bearer "+token).
@@ -182,6 +188,23 @@ func testAPI(e *httpexpect.Expect) {
 		Status(http.StatusOK).
 		JSON().Object()
 	fmt.Println(stats)
+
+	// public tests for rename and delete devices
+	w := e.PATCH(fmt.Sprintf("/api/devices/%s/accepted", uid)).
+		WithHeader("Authorization", "Bearer "+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
+		Expect().
+		Status(http.StatusOK)
+	_ = w
+
+	x := e.DELETE(fmt.Sprintf("/api/devices/%s", uid)).
+		WithHeader("Authorization", "Bearer "+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
+		Expect().
+		Status(http.StatusOK)
+	_ = x
 
 	//public tests for change username
 
@@ -217,6 +240,8 @@ func testAPI(e *httpexpect.Expect) {
 	for i, v := range forms_array {
 		n := e.PUT("/api/user").
 			WithHeader("Authorization", "Bearer "+token).
+			WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+			WithHeader("X-Username", "username").
 			WithJSON(v).
 			Expect().
 			Status(status_array[i])
@@ -254,7 +279,7 @@ func TestEchoClient(t *testing.T) {
 
 	e := httpexpect.WithConfig(httpexpect.Config{
 		// prepend this url to all requests
-		BaseURL: "http://localhost/",
+		BaseURL: "http://api:8080/",
 
 		// use http.Client with a cookie jar and timeout
 		Client: &http.Client{
