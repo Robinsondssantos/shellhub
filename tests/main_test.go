@@ -140,7 +140,7 @@ func testAPI(e *httpexpect.Expect) {
 		"device_uid": uid,
 	}
 
-	sess := e.POST("/api/devices/auth").WithJSON(sesion).
+	sess := e.POST("/api/sessions").WithJSON(sesion).
 		Expect().
 		Status(http.StatusOK).
 		JSON().Object()
