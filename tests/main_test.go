@@ -56,13 +56,6 @@ func testAPI(e *httpexpect.Expect) {
 	token := r.Value("token").String().Raw()
 	tenant := r.Value("tenant").String().Raw()
 	_ = tenant
-	/*s := e.GET("/api/auth/user").WithHeader("Authorization", "Bearer "+token).
-		Expect().
-		Status(http.StatusOK).JSON().Object()
-	s.Keys().ContainsOnly("user", "name", "tenant", "email", "token")*/
-	//esta rota funciona fora do container e dentro nao
-
-	//privateKey, _ := rsa.GenerateKey(rand.Reader, 2048)
 
 	authReq := &models.DeviceAuthRequest{
 		Info: &models.DeviceInfo{
@@ -142,6 +135,17 @@ func testAPI(e *httpexpect.Expect) {
 	// Test for public session routes
 	//set a session uid that exists
 
+	sesion := map[string]interface{}{
+		"username":   "username",
+		"device_uid": uid,
+	}
+
+	sess := e.POST("/api/devices/auth").WithJSON(sesion).
+		Expect().
+		Status(http.StatusOK).
+		JSON().Object()
+	fmt.Printf("sess %+v", sess)
+	uid_session := "suamae"
 
 	su := e.GET(fmt.Sprintf("/api/sessions/%s", uid_session)).
 		WithHeader("Authorization", "Bearer "+token).
