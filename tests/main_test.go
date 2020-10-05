@@ -139,23 +139,6 @@ func testAPI(e *httpexpect.Expect) {
 		Expect().
 		Status(http.StatusOK)
 	_ = v
-
-	w := e.PATCH(fmt.Sprintf("/api/devices/%s/accepted", uid)).
-		WithHeader("Authorization", "Bearer "+token).
-		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
-		WithHeader("X-Username", "username").
-		Expect().
-		Status(http.StatusOK)
-	_ = w
-
-	x := e.DELETE(fmt.Sprintf("/api/devices/%s", uid)).
-		WithHeader("Authorization", "Bearer "+token).
-		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
-		WithHeader("X-Username", "username").
-		Expect().
-		Status(http.StatusOK)
-	_ = x
-
 	// Test for public session routes
 	//set a session uid that exists
 
