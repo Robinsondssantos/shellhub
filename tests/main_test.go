@@ -121,9 +121,9 @@ func testAPI(e *httpexpect.Expect) {
 	for _, val := range array.Iter() {
 		val.Object().ContainsMap(device)
 	}
-	e.GET(fmt.Sprintf("/internal/auth/token/%s", tenant)).
-		Expect().
-		Status(http.StatusOK)
+	// e.GET(fmt.Sprintf("/internal/auth/token/%s", tenant)).
+	// 	Expect().
+	// 	Status(http.StatusOK)
 
 	data := map[string]interface{}{
 		"name": "newName",
