@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -404,8 +405,10 @@ func (s *Store) GetSession(ctx context.Context, uid models.UID) (*models.Session
 }
 
 func (s *Store) SetSessionAuthenticated(ctx context.Context, uid models.UID, authenticated bool) error {
-	_, err := s.db.Collection("sessions").UpdateOne(ctx, bson.M{"uid": uid}, bson.M{"$set": bson.M{"authenticated": authenticated}})
-	return err
+	//auth, err := s.db.Collection("sessions").UpdateOne(ctx, bson.M{"uid": uid}, bson.M{"$set": bson.M{"authenticated": authenticated}})
+	fmt.Println(authenticated)
+	//fmt.Printf("\n auth %+v", auth)
+	return nil
 }
 
 func (s *Store) CreateSession(ctx context.Context, session models.Session) (*models.Session, error) {

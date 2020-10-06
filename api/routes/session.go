@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -60,6 +61,8 @@ func SetSessionAuthenticated(c apicontext.Context) error {
 	}
 
 	svc := sessionmngr.NewService(c.Store())
+	fmt.Printf("\n%+v\n", req)
+	fmt.Printf("\n%+v\n", c.Param("uid"))
 
 	return svc.SetSessionAuthenticated(c.Ctx(), models.UID(c.Param("uid")), req.Authenticated)
 }

@@ -132,20 +132,40 @@ func testAPI(e *httpexpect.Expect) {
 		Expect().
 		Status(http.StatusOK)
 	_ = v
+
+	w := e.PATCH(fmt.Sprintf("/api/devices/%s/accepted", uid)).
+		WithHeader("Authorization", "Bearer "+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
+		Expect().
+		Status(http.StatusOK)
+	_ = w
 	// Test for public session routes
 	//set a session uid that exists
 
 	sesion := map[string]interface{}{
-		"username":   "username",
-		"device_uid": uid,
+		"username":      "username",
+		"device_uid":    uid,
+		"uid":           "uid",
+		"authenticated": true,
 	}
+	uid_session := "uid"
 
-	sess := e.POST("/api/sessions").WithJSON(sesion).
+	authenticated := map[string]interface{}{
+		"authenticated": true}
+
+	sess := e.POST("/internal/sessions").WithJSON(sesion).
 		Expect().
 		Status(http.StatusOK).
 		JSON().Object()
 	fmt.Printf("sess %+v", sess)
-	uid_session := "suamae"
+
+	sessAuth := e.PATCH(fmt.Sprintf("/internal/sessions/%s", uid_session)).
+		WithJSON(authenticated).
+		Expect().
+		Status(http.StatusOK)
+
+	_ = sessAuth
 
 	su := e.GET(fmt.Sprintf("/api/sessions/%s", uid_session)).
 		WithHeader("Authorization", "Bearer "+token).
@@ -164,9 +184,11 @@ func testAPI(e *httpexpect.Expect) {
 	array = e.GET("/api/sessions").
 		WithHeader("Authorization", "Bearer "+token).
 		Expect().
-		Status(http.StatusOK).
-		JSON().Array()
-	fmt.Println(array)
+		Status(http.StatusOK).JSON().Array()
+
+	for _, val := range array.Iter() {
+		val.Object().ContainsMap(sesion)
+	}
 
 	// public tests for stats
 	stats := e.GET("/api/stats").
@@ -175,15 +197,6 @@ func testAPI(e *httpexpect.Expect) {
 		Status(http.StatusOK).
 		JSON().Object()
 	fmt.Println(stats)
-
-	// public tests for rename and delete devices
-	w := e.PATCH(fmt.Sprintf("/api/devices/%s/accepted", uid)).
-		WithHeader("Authorization", "Bearer "+token).
-		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
-		WithHeader("X-Username", "username").
-		Expect().
-		Status(http.StatusOK)
-	_ = w
 
 	x := e.DELETE(fmt.Sprintf("/api/devices/%s", uid)).
 		WithHeader("Authorization", "Bearer "+token).
@@ -234,6 +247,7 @@ func testAPI(e *httpexpect.Expect) {
 			Status(status_array[i])
 		fmt.Println(n)
 	}
+
 	/*e.GET(fmt.Sprintf("/internal/token/%s", tenant)).
 			Expect().
 			Status(http.StatusOK)
