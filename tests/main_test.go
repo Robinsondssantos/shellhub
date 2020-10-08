@@ -153,6 +153,13 @@ func testAPI(e *httpexpect.Expect) {
 		val.Object().ContainsMap(session)
 	}
 
+	e.POST(fmt.Sprintf("/internal/sessions/%s/finish", uid_session)).
+		WithHeader("Authorization", "Bearer"+token).
+		WithHeader("X-Tenant-ID", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx").
+		WithHeader("X-Username", "username").
+		Expect().
+		Status(http.StatusOK)
+
 	// public tests for stats
 	e.GET("/api/stats").
 		WithHeader("Authorization", "Bearer "+token).
