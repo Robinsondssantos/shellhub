@@ -12,6 +12,7 @@ import (
 const (
 	UpdateUserURL   = "/user"
 	UserSecurityURL = "/user/security"
+	GetUserURL = "/user/:uid"
 )
 
 func UpdateUser(c apicontext.Context) error {
@@ -88,6 +89,23 @@ func GetUserSecurity(c apicontext.Context) error {
 	svc := user.NewService(c.Store())
 
 	status, err := svc.GetDataUserSecurity(c.Ctx(), tenant)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, status)
+}
+
+func GetUser(c apicontext.Context) error {
+	tenant := ""
+	if v := c.Tenant(); v != nil {
+		tenant = v.ID
+	}
+
+	svc := user.NewService(c.Store())
+
+	status, err := svc.GetUser(c.Ctx(), tenant)
+
 	if err != nil {
 		return err
 	}

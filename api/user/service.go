@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/shellhub-io/shellhub/api/store"
+	"github.com/shellhub-io/shellhub/pkg/models"
 )
 
 var ErrUnauthorized = errors.New("unauthorized")
@@ -14,6 +15,7 @@ type Service interface {
 	UpdateDataUser(ctx context.Context, username, email, currentPassword, newPassword, tenant string) ([]InvalidField, error)
 	UpdateDataUserSecurity(ctx context.Context, status bool, tenant string) error
 	GetDataUserSecurity(ctx context.Context, tenant string) (bool, error)
+	GetUser(ctx context.Context, tenant string) (*models.User, error)
 }
 
 type service struct {
@@ -70,4 +72,8 @@ func (s *service) UpdateDataUserSecurity(ctx context.Context, sessionRecord bool
 
 func (s *service) GetDataUserSecurity(ctx context.Context, tenant string) (bool, error) {
 	return s.store.GetDataUserSecurity(ctx, tenant)
+}
+
+func (s *service) GetUser(ctx context.Context, tenant string) (*models.User, error) {
+	return s.store.GetUserByTenant(ctx, tenant)
 }
