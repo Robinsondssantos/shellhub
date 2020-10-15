@@ -1,7 +1,7 @@
 <template>
   <fragment>
     <div class="d-flex pa-0 align-center">
-      <h1>Devices</h1>
+      <h1 class="text-h5 font-weight-medium primary--text text--darken-1">Devices</h1>
       <v-spacer />
       <v-text-field
         v-model="search"
@@ -22,7 +22,7 @@
         Add Device
       </v-btn>
     </div>
-    <v-card class="mt-2">
+    <v-card class="mt-4">
       <v-app-bar
         flat
         color="transparent"

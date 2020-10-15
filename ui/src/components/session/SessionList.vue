@@ -1,12 +1,12 @@
 <template>
   <fragment>
     <div class="d-flex pa-0 align-center">
-      <h1>Sessions</h1>
+      <h1 class="text-h5 font-weight-medium primary--text text--darken-1">Sessions</h1>
       <v-spacer />
       <v-spacer />
     </div>
 
-    <v-card class="mt-2">
+    <v-card class="mt-4">
       <v-app-bar
         flat
         color="transparent"

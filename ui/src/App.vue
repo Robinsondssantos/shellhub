@@ -64,9 +64,15 @@
           </v-chip>
         </template>
       </v-menu>
-      <v-chip>
-        <v-icon>help</v-icon>
-      </v-chip>
+      <v-btn
+        class="ma-1"
+        icon
+        small
+      >
+        <v-icon>
+          help
+        </v-icon>
+      </v-btn>
 
       <Notification />
 
@@ -74,7 +80,15 @@
         offset-y
       >
         <template #activator="{ on }">
-          <v-chip v-on="on">
+          <v-btn
+            icon
+            v-on="on"
+          >
+            <v-icon>
+              mdi-account
+            </v-icon>
+          </v-btn>
+          <!-- <v-chip v-on="on">
             <v-icon left>
               mdi-account
             </v-icon>
@@ -82,7 +96,7 @@
             <v-icon right>
               mdi-chevron-down
             </v-icon>
-          </v-chip>
+          </v-chip> -->
         </template>
 
         <v-card>
@@ -131,7 +145,7 @@
         </v-card>
       </v-menu>
     </v-app-bar>
-    <v-main class="grey lighten-3">
+    <v-main class="grey lighten-4">
       <v-container
         class="pa-8"
         fluid

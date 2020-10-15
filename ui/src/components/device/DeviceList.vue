@@ -2,7 +2,6 @@
   <fragment>
     <v-card-text class="pa-0">
       <v-data-table
-        class="elevation-1"
         :headers="headers"
         :items="getListDevices"
         data-test="dataTable-field"
