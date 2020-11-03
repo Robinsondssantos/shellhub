@@ -20,8 +20,8 @@
         class="pt-0"
       >
         <v-card
+          class="ml-2 mr-2"
           outlined
-          elevation="1"
         >
           <v-list-item three-line>
             <v-list-item-content>

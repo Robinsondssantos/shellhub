@@ -1,12 +1,11 @@
 <template>
   <fragment>
-    <div class="d-flex pa-0 align-center">
-      <h1>Sessions</h1>
-      <v-spacer />
-      <v-spacer />
+    <!-- <h2 class="font-weight-medium secondary--text mb-2">Sessions</h2> -->
+    <div class="mb-2">
+      <span class="headline font-weight-medium secondary--text">Sessions</span>
     </div>
-
-    <v-card class="mt-2">
+    <v-divider></v-divider>
+    <v-card class="card-rounded mt-12" outlined>
       <v-app-bar
         flat
         color="transparent"
@@ -16,7 +15,7 @@
 
       <v-divider />
 
-      <v-card-text class="pa-0">
+      <v-card-text>
         <v-data-table
           :headers="headers"
           :items="getListSessions"
@@ -29,6 +28,8 @@
           :server-items-length="getNumberSessions"
           :options.sync="pagination"
           :disable-sort="true"
+          fixed-header
+          dense
         >
           <template #[`item.active`]="{ item }">
             <v-icon

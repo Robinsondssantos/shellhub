@@ -13,14 +13,17 @@
         offset-x="20"
         color="success"
       >
-        <v-chip
+        <v-btn
+          small
+          icon
           v-on="on"
+          class="ma-1"
           @click="shown=true"
         >
           <v-icon>
             notifications
           </v-icon>
-        </v-chip>
+        </v-btn>
       </v-badge>
     </template>
 

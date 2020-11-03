@@ -6,8 +6,10 @@
       app
       clipped
       dark
+      permanent
+      expand-on-hover
     >
-      <v-list>
+      <v-list nav dense>
         <v-list-item
           v-for="item in visibleItems"
           :key="item.title"
@@ -64,9 +66,13 @@
           </v-chip>
         </template>
       </v-menu>
-      <v-chip>
+      <v-btn
+        small
+        icon
+        class="ma-1"
+      >
         <v-icon>help</v-icon>
-      </v-chip>
+      </v-btn>
 
       <Notification />
 
@@ -133,8 +139,8 @@
     </v-app-bar>
     <v-main class="grey lighten-4">
       <v-container
-        class="pa-8"
         fluid
+        class="mt-4 pa-8"
       >
         <router-view :key="$route.fullPath" />
       </v-container>
@@ -248,4 +254,9 @@ export default {
   text-shadow: #000 0 0 6px;
   color: transparent;
 }
+
+.card-rounded {
+  border-radius: 8px !important;
+}
+
 </style>

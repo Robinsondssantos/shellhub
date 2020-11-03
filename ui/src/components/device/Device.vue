@@ -1,29 +1,35 @@
 <template>
   <fragment>
-    <div class="d-flex pa-0 align-center">
-      <h1>Devices</h1>
-      <v-spacer />
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search by hostname"
-        class="mx-6"
-        single-line
-        hide-details
-        data-test="search-text"
-      />
-      <v-spacer />
-      <DeviceAdd />
-      <v-btn
-        class="v-btn--active mr-2"
-        text
-        color="primary"
-        @click="$store.dispatch('modals/showAddDevice', true)"
-      >
-        Add Device
-      </v-btn>
+    <div class="mb-2">
+      <span class="headline font-weight-medium secondary--text">Devices</span>
     </div>
-    <v-card class="mt-2">
+    <v-divider></v-divider>
+    <v-card class="card-rounded mt-12" outlined>
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search by hostname"
+          dense
+          flat
+          solo
+          single-line
+          hide-details
+          data-test="search-text"
+          background-color="grey lighten-4"
+          class="mt-2"
+        />
+        <v-spacer />
+        <DeviceAdd />
+        <v-btn
+          class="v-btn--active mt-2"
+          text
+          color="primary"
+          @click="$store.dispatch('modals/showAddDevice', true)"
+        >
+          Add Device
+        </v-btn>
+      </v-card-title>
       <v-app-bar
         flat
         color="transparent"
